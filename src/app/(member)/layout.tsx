@@ -13,7 +13,7 @@ export default async function MemberLayout({
   return (
     <>
       <Navbar user={{ name: session.user.name, role: session.user.role }} />
-      <main className="flex-1 pt-16">{children}</main>
+      <main className="flex-1 pt-20">{children}</main>
     </>
   );
 }

@@ -2,42 +2,54 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="border-t border-ash/50 bg-obsidian">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <footer className="relative border-t border-gold/10 overflow-hidden">
+      <div className="absolute inset-0 bg-radial-dark" />
+      <div className="absolute inset-0 grain-overlay" />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div>
-            <h3 className="font-display text-xl font-bold text-gradient-gold mb-3">
+            <h3 className="font-cursive text-3xl text-gradient-gold mb-4">
               La Folie
             </h3>
-            <p className="text-sm text-mist max-w-xs">
-              An exclusive, referral-only nightlife experience. By invitation only.
+            <p className="text-sm text-ivory/30 max-w-xs leading-relaxed">
+              An exclusive, referral-only nightlife collective. Born from obsession.
+              Entry by invitation only.
             </p>
           </div>
           <div>
-            <h4 className="text-sm font-medium text-ivory mb-3">Navigate</h4>
-            <div className="flex flex-col gap-2">
-              <Link href="/story" className="text-sm text-mist hover:text-gold transition-colors">
+            <h4 className="text-[10px] tracking-[0.3em] uppercase text-gold/50 mb-5">
+              Navigate
+            </h4>
+            <div className="flex flex-col gap-3">
+              <Link href="/story" className="text-sm text-ivory/40 hover:text-gold transition-colors duration-300">
                 Our Story
               </Link>
-              <Link href="/events" className="text-sm text-mist hover:text-gold transition-colors">
+              <Link href="/events" className="text-sm text-ivory/40 hover:text-gold transition-colors duration-300">
                 Events
               </Link>
-              <Link href="/access" className="text-sm text-mist hover:text-gold transition-colors">
+              <Link href="/access" className="text-sm text-ivory/40 hover:text-gold transition-colors duration-300">
                 Request Access
               </Link>
             </div>
           </div>
           <div>
-            <h4 className="text-sm font-medium text-ivory mb-3">Legal</h4>
-            <div className="flex flex-col gap-2">
-              <span className="text-sm text-mist">Terms of Service</span>
-              <span className="text-sm text-mist">Privacy Policy</span>
+            <h4 className="text-[10px] tracking-[0.3em] uppercase text-gold/50 mb-5">
+              Legal
+            </h4>
+            <div className="flex flex-col gap-3">
+              <span className="text-sm text-ivory/30">Terms of Service</span>
+              <span className="text-sm text-ivory/30">Privacy Policy</span>
             </div>
           </div>
         </div>
-        <div className="mt-10 pt-6 border-t border-ash/50 text-center">
-          <p className="text-xs text-mist">
-            &copy; {new Date().getFullYear()} La Folie. All rights reserved. Entry by invitation only.
+
+        <div className="mt-14 pt-8 border-t border-gold/10 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-[11px] tracking-[0.1em] text-ivory/20">
+            &copy; {new Date().getFullYear()} La Folie. All rights reserved.
+          </p>
+          <p className="text-[11px] tracking-[0.1em] text-ivory/20 italic">
+            Entry by invitation only.
           </p>
         </div>
       </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { loginAction } from "@/actions/auth";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -30,8 +28,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-32">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--color-charcoal)_0%,_var(--color-obsidian)_70%)]" />
+    <div className="min-h-screen flex items-center justify-center px-4 py-32 relative">
+      <div className="absolute inset-0 bg-radial-dark" />
+      <div className="absolute inset-0 grain-overlay" />
+
+      {/* Ambient glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gold/[0.04] rounded-full blur-[120px]" />
 
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -39,57 +41,67 @@ export default function LoginPage() {
         transition={{ duration: 0.8 }}
         className="relative z-10 w-full max-w-sm"
       >
-        <div className="text-center mb-8">
-          <Link href="/" className="font-display text-3xl font-bold text-gradient-gold">
+        <div className="text-center mb-10">
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="w-12 h-px bg-gold/40 mx-auto mb-8"
+          />
+          <Link href="/" className="font-cursive text-5xl text-gradient-gold">
             La Folie
           </Link>
-          <p className="text-mist text-sm mt-3">Welcome back to the madness</p>
+          <p className="text-ivory/30 text-sm mt-4 tracking-wide">Welcome back to the madness</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <Input
-            id="email"
-            label="Email"
-            type="email"
-            placeholder="your@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <Input
-            id="password"
-            label="Password"
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+        <div className="glass rounded-2xl p-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <Input
+              id="email"
+              label="Email"
+              type="email"
+              placeholder="your@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <Input
+              id="password"
+              label="Password"
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
 
-          {error && (
-            <p className="text-sm text-red-400 text-center">{error}</p>
-          )}
+            {error && (
+              <p className="text-sm text-red-400 text-center">{error}</p>
+            )}
 
-          <Button
-            type="submit"
-            variant="primary"
-            size="lg"
-            className="w-full"
-            loading={loading}
-          >
-            Sign In
-          </Button>
-        </form>
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              className="w-full"
+              loading={loading}
+            >
+              Sign In
+            </Button>
+          </form>
+        </div>
 
-        <p className="text-center text-sm text-mist mt-6">
+        <p className="text-center text-sm text-ivory/30 mt-8">
           Don{"'"}t have an account?{" "}
           <Link
             href="/access"
-            className="text-gold hover:text-gold-light transition-colors"
+            className="text-gold/70 hover:text-gold transition-colors duration-300"
           >
             Request access
           </Link>
         </p>
+
+        <div className="w-8 h-px bg-gold/20 mx-auto mt-8" />
       </motion.div>
     </div>
   );

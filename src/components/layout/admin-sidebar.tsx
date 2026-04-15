@@ -83,7 +83,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
     <>
       {/* Logo */}
       <div className="p-6 border-b border-ash/50">
-        <Link href="/admin" className="font-display text-xl font-bold text-gradient-gold">
+        <Link href="/admin" className="font-cursive text-2xl text-gradient-gold">
           La Folie
         </Link>
         <p className="text-xs text-mist mt-1">Admin Panel</p>

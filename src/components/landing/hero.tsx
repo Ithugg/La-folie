@@ -1,100 +1,123 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import Link from "next/link";
 
 export function HeroSection() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background effects */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--color-charcoal)_0%,_var(--color-obsidian)_70%)]" />
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gold/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gold/5 rounded-full blur-[100px]" />
-      </div>
+    <section ref={ref} className="relative h-screen overflow-hidden">
+      {/* Background image with parallax */}
+      <motion.div style={{ scale }} className="absolute inset-0">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=1920&q=80')`,
+          }}
+        />
+        {/* Dark cinematic overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-obsidian/70 via-obsidian/50 to-obsidian" />
+        <div className="absolute inset-0 bg-gradient-to-r from-obsidian/60 via-transparent to-obsidian/60" />
+        {/* Gold tint */}
+        <div className="absolute inset-0 bg-gold/[0.03] mix-blend-overlay" />
+      </motion.div>
 
-      {/* Grain overlay */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-      }} />
+      {/* Film grain */}
+      <div className="absolute inset-0 grain-overlay pointer-events-none" />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-        >
+      {/* Ambient glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-gold/[0.06] rounded-full blur-[150px] animate-glow" />
+
+      {/* Content */}
+      <motion.div style={{ opacity, y }} className="relative z-10 h-full flex flex-col items-center justify-center px-4">
+        <div className="max-w-5xl mx-auto text-center">
+          {/* Decorative line */}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 1.2, delay: 0.2, ease: "easeInOut" }}
+            className="w-16 h-px bg-gold/60 mx-auto mb-8 origin-center"
+          />
+
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="text-gold/80 text-sm tracking-[0.3em] uppercase mb-6"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            className="text-gold/70 text-[11px] sm:text-xs tracking-[0.5em] uppercase mb-8 font-body"
           >
             By Invitation Only
           </motion.p>
 
-          <h1 className="font-display text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight mb-6">
-            <span className="text-gradient-gold">La Folie</span>
-          </h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="text-xl sm:text-2xl text-mist font-light max-w-2xl mx-auto mb-4"
+            transition={{ delay: 0.6, duration: 1, ease: "easeOut" }}
+            className="font-display text-[80px] sm:text-[110px] md:text-[140px] lg:text-[170px] font-light leading-[0.85] tracking-[-0.02em] mb-8"
           >
-            Where the night belongs to the chosen few
-          </motion.p>
+            <span className="font-cursive text-gradient-gold">La Folie</span>
+          </motion.h1>
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="text-sm text-mist/60 max-w-lg mx-auto mb-12"
+            transition={{ delay: 1, duration: 1 }}
+            className="font-accent text-lg sm:text-xl md:text-2xl text-ivory/70 font-normal italic max-w-xl mx-auto mb-12 leading-relaxed"
           >
-            An exclusive underground nightlife collective, curated by three visionaries.
-            Every event is a statement. Every guest is handpicked.
+            Where the night belongs to the chosen few
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 0.6 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            transition={{ delay: 1.4, duration: 0.8 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           >
             <Link
               href="/access"
-              className="group relative inline-flex items-center justify-center px-8 py-4 text-sm font-medium text-obsidian overflow-hidden rounded-lg"
+              className="group relative inline-flex items-center justify-center px-10 py-4 overflow-hidden rounded-full"
             >
-              <span className="absolute inset-0 bg-gradient-to-r from-gold-dark via-gold to-gold-light" />
-              <span className="absolute inset-0 bg-gradient-to-r from-gold-dark via-gold-light to-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <span className="relative">Request Access</span>
+              <span className="absolute inset-0 bg-gradient-to-r from-gold-dark via-gold to-gold-light opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
+              <span className="absolute inset-[1px] bg-obsidian/40 rounded-full group-hover:bg-transparent transition-all duration-500" />
+              <span className="relative text-sm font-medium tracking-[0.15em] uppercase text-ivory group-hover:text-obsidian transition-colors duration-500">
+                Request Access
+              </span>
             </Link>
             <Link
               href="/story"
-              className="inline-flex items-center justify-center px-8 py-4 text-sm font-medium text-ivory border border-ash hover:border-mist rounded-lg transition-colors"
+              className="inline-flex items-center gap-2 px-8 py-4 text-sm tracking-[0.1em] uppercase text-ivory/50 hover:text-gold transition-colors duration-500"
             >
-              Our Story
+              <span>Discover</span>
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 9l-7 7-7-7" />
+              </svg>
             </Link>
           </motion.div>
-        </motion.div>
+        </div>
 
-        {/* Scroll indicator */}
+        {/* Bottom fade line */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          transition={{ delay: 2 }}
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
         >
           <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-            className="w-5 h-8 rounded-full border border-mist/30 flex items-start justify-center p-1"
-          >
-            <div className="w-1 h-2 bg-gold/60 rounded-full" />
-          </motion.div>
+            animate={{ y: [0, 6, 0] }}
+            transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+            className="w-[1px] h-10 bg-gradient-to-b from-transparent via-gold/40 to-transparent"
+          />
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }

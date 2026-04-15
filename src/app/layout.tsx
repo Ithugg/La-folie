@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Cormorant_Garamond, Libre_Baskerville, Great_Vibes } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -7,16 +7,29 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const playfair = Playfair_Display({
+const cormorant = Cormorant_Garamond({
   variable: "--font-display",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const libreBaskerville = Libre_Baskerville({
+  variable: "--font-accent",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
+const greatVibes = Great_Vibes({
+  variable: "--font-cursive",
+  subsets: ["latin"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
-  title: "La Folie | Exclusive Nightlife",
+  title: "La Folie | By Invitation Only",
   description:
-    "An exclusive, referral-only nightlife experience. By invitation only.",
-  keywords: ["nightlife", "exclusive", "membership", "events", "DJ"],
+    "An exclusive, referral-only nightlife collective. Born from obsession. Entry by invitation only.",
+  keywords: ["nightlife", "exclusive", "membership", "events", "DJ", "underground", "collective"],
 };
 
 export default function RootLayout({
@@ -27,7 +40,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${playfair.variable} h-full`}
+      className={`${inter.variable} ${cormorant.variable} ${libreBaskerville.variable} ${greatVibes.variable} h-full`}
     >
       <body className="min-h-full flex flex-col bg-obsidian text-ivory antialiased">
         {children}

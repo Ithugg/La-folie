@@ -1,67 +1,142 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
+
+const chapters = [
+  {
+    label: "The Origin",
+    text: "It started in the medinas. In the narrow streets where the sound of oud drifts through open windows and bass leaks from basement speakers at 3am. Three friends, raised on the same soil, fed by the same restless hunger — for something more, something louder, something that made the night feel infinite.",
+  },
+  {
+    label: "The Crossing",
+    text: "Morocco gave them roots. Atlanta gave them range. They landed in a city that pulses with rhythm — where hip-hop bleeds into house, where Southern soul meets electronic grit. They didn't try to fit in. They built their own frequency. Late nights in studios turned into warehouse parties. Warehouse parties turned into something people whispered about.",
+  },
+  {
+    label: "The Sound",
+    text: "One of them could turn a room inside out with a single transition — landscapes and memories woven into every set, deep melodic currents that made strangers hold their breath. He'd shared stages with names you'd recognize, but the rooms he cared about most were the ones with no names at all. Where the ceiling was low and the bass was honest.",
+  },
+  {
+    label: "The Energy",
+    text: "Another one didn't just play music — he conducted emotion. He was the tension before the drop. The silence that makes the next beat sacred. He understood that a great night isn't built in the speakers. It's built in the space between people. In the moment a stranger's eyes meet yours across a dark room and you both know: this is it.",
+  },
+  {
+    label: "The Architecture",
+    text: "And then there was the one who saw the bigger picture. While they dreamed in frequencies, he dreamed in blueprints. Every detail — from the weight of the paper an invitation was printed on to the angle of light hitting a concrete wall — passed through his eye. He didn't plan nights. He engineered feelings.",
+  },
+  {
+    label: "The Pact",
+    text: "One night, somewhere between a rooftop in Marrakech and a basement in Atlanta, they made a decision. No more playing by rules written for someone else's world. They would build their own. A place where the night wasn't consumed — it was created. Where every guest was chosen, every moment was intentional, and the only currency that mattered was trust.",
+  },
+  {
+    label: "La Folie",
+    text: "The French call it madness. But the best things always look like madness from the outside. La Folie is the name they gave to what they couldn't explain — that feeling when the lights go low and the room breathes as one. It's not a party. It's not a brand. It's a pact between people who believe that the night, done right, is the most honest thing in the world.",
+  },
+];
 
 export default function StoryPage() {
+  const heroRef = useRef(null);
+  const { scrollYProgress: heroProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const heroOpacity = useTransform(heroProgress, [0, 0.8], [1, 0]);
+
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="relative py-32 px-4">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--color-charcoal)_0%,_var(--color-obsidian)_70%)]" />
-        <div className="relative z-10 max-w-3xl mx-auto text-center">
+      <section ref={heroRef} className="relative h-[80vh] flex items-center justify-center overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1920&q=80')`,
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-obsidian/60 via-obsidian/40 to-obsidian" />
+        <div className="absolute inset-0 grain-overlay" />
+
+        <motion.div style={{ opacity: heroOpacity }} className="relative z-10 text-center px-4">
           <motion.div
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 1.2, delay: 0.2 }}
+            className="w-12 h-px bg-gold/60 mx-auto mb-8"
+          />
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-gold/50 text-[10px] tracking-[0.6em] uppercase mb-6"
+          >
+            The Story
+          </motion.p>
+          <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ delay: 0.6, duration: 1 }}
+            className="font-display text-6xl sm:text-7xl md:text-8xl font-light text-ivory leading-[0.9]"
           >
-            <p className="text-gold/60 text-xs tracking-[0.4em] uppercase mb-4">
-              Origin Story
-            </p>
-            <h1 className="font-display text-5xl sm:text-6xl font-bold text-ivory mb-6">
-              Born from the <span className="text-gradient-gold">underground</span>
-            </h1>
-          </motion.div>
-        </div>
+            Born from the<br />
+            <span className="text-gradient-gold italic">underground</span>
+          </motion.h1>
+        </motion.div>
       </section>
 
-      {/* Story Content */}
-      <section className="py-20 px-4">
-        <div className="max-w-2xl mx-auto space-y-12">
-          {[
-            {
-              year: "The Beginning",
-              text: "Three DJs. One shared obsession: creating nights that people remember forever. Not just events — experiences that blur the line between reality and ecstasy. We met in the dark corners of warehouses, connected by a frequency only a few can hear.",
-            },
-            {
-              year: "The Vision",
-              text: "The mainstream nightlife scene felt hollow. Overpriced bottles, overcrowded floors, overproduced music. We wanted the opposite: intimate gatherings where every soul in the room was there because they truly belonged. Where the music wasn't background — it was the heartbeat.",
-            },
-            {
-              year: "The Code",
-              text: "La Folie operates on one rule: you can only enter if someone on the inside vouches for you. No PR lists. No influencer tables. No exceptions. This isn't exclusivity for its own sake — it's a filter that ensures every night maintains its magic.",
-            },
-            {
-              year: "The Future",
-              text: "What started as underground gatherings has evolved into a movement. Each event pushes boundaries further. Secret locations, immersive experiences, and a community that grows stronger with every shared sunrise. The madness is just beginning.",
-            },
-          ].map((section, i) => (
-            <motion.div
-              key={section.year}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.1 }}
-              className="relative pl-8 border-l border-gold/20"
-            >
-              <div className="absolute left-0 top-0 w-2 h-2 rounded-full bg-gold -translate-x-[5px]" />
-              <p className="text-gold text-xs tracking-[0.3em] uppercase mb-3">
-                {section.year}
-              </p>
-              <p className="text-mist leading-relaxed text-lg">
-                {section.text}
-              </p>
-            </motion.div>
-          ))}
+      {/* Story chapters */}
+      <section className="relative py-32 px-4">
+        <div className="absolute inset-0 bg-radial-dark" />
+
+        <div className="relative z-10 max-w-2xl mx-auto">
+          {/* Opening line */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+            className="font-accent text-2xl sm:text-3xl text-ivory/60 italic text-center mb-24 leading-relaxed"
+          >
+            Three friends. One shared obsession.<br />
+            <span className="text-gold/50">The rest is history being written.</span>
+          </motion.p>
+
+          {/* Chapters */}
+          <div className="space-y-20">
+            {chapters.map((chapter, i) => (
+              <motion.div
+                key={chapter.label}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.8 }}
+                className="relative"
+              >
+                {/* Left accent */}
+                <div className="absolute -left-6 sm:-left-10 top-0 bottom-0 w-px bg-gradient-to-b from-gold/30 via-gold/10 to-transparent" />
+                <div className="absolute -left-6 sm:-left-10 top-1 w-1.5 h-1.5 rounded-full bg-gold/60" />
+
+                <p className="text-gold/40 text-[10px] tracking-[0.5em] uppercase mb-4">
+                  {chapter.label}
+                </p>
+                <p className="text-ivory/50 text-[17px] leading-[2] font-light">
+                  {chapter.text}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Closing */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+            className="text-center mt-32"
+          >
+            <div className="w-16 h-px bg-gold/30 mx-auto mb-8" />
+            <p className="font-display text-4xl sm:text-5xl font-light text-ivory/30 italic">
+              The madness continues.
+            </p>
+          </motion.div>
         </div>
       </section>
     </div>
