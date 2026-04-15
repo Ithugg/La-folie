@@ -10,12 +10,12 @@ async function main() {
   const admins = [
     {
       name: "Ismail",
-      email: "ismail@lafolie.club",
+      email: "ismail.elktiri02@gmail.com",
       password: "Admin123!",
     },
     {
-      name: "Zohair",
-      email: "zohair@lafolie.club",
+      name: "Zouhair",
+      email: "zabadanmusic@gmail.com",
       password: "Admin123!",
     },
     {
