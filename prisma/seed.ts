@@ -9,18 +9,18 @@ async function main() {
   // Create 3 admin DJ/founder accounts
   const admins = [
     {
-      name: "DJ Axiom",
-      email: "axiom@lafolie.club",
+      name: "Ismail",
+      email: "ismail@lafolie.club",
       password: "Admin123!",
     },
     {
-      name: "DJ Noctis",
-      email: "noctis@lafolie.club",
+      name: "Zohair",
+      email: "zohair@lafolie.club",
       password: "Admin123!",
     },
     {
-      name: "DJ Elara",
-      email: "elara@lafolie.club",
+      name: "Souhail",
+      email: "souhail@lafolie.club",
       password: "Admin123!",
     },
   ];
@@ -47,7 +47,7 @@ async function main() {
   for (const admin of adminUsers) {
     await prisma.referralCode.create({
       data: {
-        code: `FOLIE-${admin.name.split(" ")[1]?.toUpperCase() || "VIP"}`,
+        code: `FOLIE-${admin.name.toUpperCase()}`,
         createdById: admin.id,
         maxUses: 50,
         isActive: true,
