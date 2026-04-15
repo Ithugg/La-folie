@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node --version:*)",
+      "Bash(npm:*)",
+      "Bash(npx --version:*)",
+      "WebSearch",
+      "Bash(npx create-next-app:*)",
+      "Bash(npx create-next-app@latest:*)",
+      "Bash(powershell -Command \"Copy-Item -Path ''la-folie-temp\\\\*'' -Destination ''.'' -Recurse -Force; Copy-Item -Path ''la-folie-temp\\\\.gitignore'' -Destination ''.'' -Force; Remove-Item -Path ''la-folie-temp'' -Recurse -Force\")",
+      "Bash(powershell -Command:*)",
+      "Bash(powershell -File -:*)",
+      "Bash(powershell -ExecutionPolicy Bypass -File setup-dirs.ps1:*)",
+      "Bash(npx prisma generate:*)",
+      "Bash(npx prisma db push:*)",
+      "Bash(npx tsx:*)",
+      "Bash(npx next build:*)",
+      "Bash(curl:*)"
+    ]
+  }
+}
