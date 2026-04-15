@@ -1,12 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { addToWaitlist } from "@/actions/admin";
 
 export default function AccessPage() {
+  const router = useRouter();
+  const [view, setView] = useState<"main" | "waitlist">("main");
+
+  // Referral code state
+  const [referralCode, setReferralCode] = useState("");
+
+  // Waitlist state
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
@@ -14,7 +22,14 @@ export default function AccessPage() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleCodeSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const code = referralCode.trim().toUpperCase();
+    if (!code) return;
+    router.push(`/join/${encodeURIComponent(code)}`);
+  }
+
+  async function handleWaitlistSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError("");
@@ -41,6 +56,7 @@ export default function AccessPage() {
         transition={{ duration: 0.8 }}
         className="relative z-10 w-full max-w-md"
       >
+        {/* Waitlist success */}
         {submitted ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -61,7 +77,80 @@ export default function AccessPage() {
             </p>
             <div className="w-8 h-px bg-gold/20 mx-auto mt-10" />
           </motion.div>
+        ) : view === "main" ? (
+          <>
+            {/* Header */}
+            <div className="text-center mb-10">
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 1, delay: 0.2 }}
+                className="w-12 h-px bg-gold/40 mx-auto mb-8"
+              />
+              <p className="text-gold/50 text-[10px] tracking-[0.5em] uppercase mb-6">
+                Enter the Circle
+              </p>
+              <h1 className="font-display text-5xl sm:text-6xl font-light text-ivory mb-4 leading-[1.1]">
+                Got an<br />
+                <span className="text-gradient-gold italic">invitation?</span>
+              </h1>
+              <p className="text-ivory/30 text-sm mt-4 max-w-xs mx-auto leading-relaxed">
+                If someone on the inside trusted you enough to share their code, enter it below.
+              </p>
+            </div>
+
+            {/* Referral Code Input */}
+            <div className="glass rounded-2xl p-8 mb-6">
+              <form onSubmit={handleCodeSubmit} className="space-y-6">
+                <div className="space-y-2">
+                  <label className="block text-[10px] tracking-[0.15em] uppercase text-ivory/40">
+                    Referral Code
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full px-5 py-4 rounded-xl bg-charcoal/50 border border-white/[0.06] text-ivory text-center font-mono text-lg tracking-[0.2em] uppercase placeholder:text-ivory/15 placeholder:tracking-[0.2em] focus:outline-none focus:ring-1 focus:ring-gold/30 focus:border-gold/20 transition-all duration-300"
+                    placeholder="FOLIE-XXXXXX"
+                    value={referralCode}
+                    onChange={(e) => setReferralCode(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  variant="gold"
+                  size="lg"
+                  className="w-full"
+                >
+                  Claim My Spot
+                </Button>
+              </form>
+            </div>
+
+            {/* Divider */}
+            <div className="flex items-center gap-4 my-8">
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent to-gold/10" />
+              <span className="text-[10px] tracking-[0.3em] uppercase text-ivory/20">or</span>
+              <div className="flex-1 h-px bg-gradient-to-l from-transparent to-gold/10" />
+            </div>
+
+            {/* Waitlist option */}
+            <div className="text-center">
+              <p className="text-ivory/30 text-sm mb-4">
+                Don{"'"}t have a code? Join the waitlist.
+              </p>
+              <button
+                onClick={() => setView("waitlist")}
+                className="inline-flex items-center gap-2 text-[11px] tracking-[0.15em] uppercase text-gold/60 hover:text-gold transition-colors duration-300"
+              >
+                <span className="w-4 h-px bg-current" />
+                Request Access
+                <span className="w-4 h-px bg-current" />
+              </button>
+            </div>
+          </>
         ) : (
+          /* Waitlist form */
           <>
             <div className="text-center mb-10">
               <motion.div
@@ -78,12 +167,12 @@ export default function AccessPage() {
                 <span className="text-gradient-gold italic">waitlist</span>
               </h1>
               <p className="text-ivory/30 text-sm mt-4">
-                Don{"'"}t have an invitation? Tell us why you belong.
+                Tell us why you belong. We{"'"}ll decide.
               </p>
             </div>
 
             <div className="glass rounded-2xl p-8">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleWaitlistSubmit} className="space-y-6">
                 <Input
                   id="name"
                   label="Your Name"
@@ -127,6 +216,13 @@ export default function AccessPage() {
                 </Button>
               </form>
             </div>
+
+            <button
+              onClick={() => setView("main")}
+              className="block mx-auto mt-8 text-[11px] tracking-[0.15em] uppercase text-ivory/30 hover:text-gold/60 transition-colors duration-300"
+            >
+              &larr; I have a referral code
+            </button>
           </>
         )}
       </motion.div>
