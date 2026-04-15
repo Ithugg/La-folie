@@ -82,8 +82,30 @@ export async function updateUserStatus(userId: string, status: string) {
   return user;
 }
 
+const MAX_ADMINS = 3;
+
+export async function getAdminCount() {
+  return db.user.count({ where: { role: "ADMIN" } });
+}
+
+export async function getAdmins() {
+  await requireAdmin();
+  return db.user.findMany({
+    where: { role: "ADMIN" },
+    select: { id: true, name: true, email: true, createdAt: true },
+    orderBy: { createdAt: "asc" },
+  });
+}
+
 export async function updateUserRole(userId: string, role: string) {
   const session = await requireAdmin();
+
+  if (role === "ADMIN") {
+    const adminCount = await getAdminCount();
+    if (adminCount >= MAX_ADMINS) {
+      return { error: `Maximum of ${MAX_ADMINS} admins allowed` };
+    }
+  }
 
   const user = await db.user.update({
     where: { id: userId },
@@ -101,6 +123,70 @@ export async function updateUserRole(userId: string, role: string) {
   });
 
   return user;
+}
+
+export async function inviteAdmin(email: string) {
+  const session = await requireAdmin();
+
+  const adminCount = await getAdminCount();
+  if (adminCount >= MAX_ADMINS) {
+    return { error: `Maximum of ${MAX_ADMINS} admins reached. Remove an admin first.` };
+  }
+
+  const user = await db.user.findUnique({ where: { email } });
+  if (!user) {
+    return { error: "No user found with that email. They must sign up first." };
+  }
+  if (user.role === "ADMIN") {
+    return { error: "This user is already an admin." };
+  }
+
+  await db.user.update({
+    where: { id: user.id },
+    data: { role: "ADMIN" },
+  });
+
+  await db.auditLog.create({
+    data: {
+      userId: session.user.id,
+      action: "INVITE_ADMIN",
+      entity: "User",
+      entityId: user.id,
+      details: `Promoted ${user.name} (${user.email}) to admin`,
+    },
+  });
+
+  return { success: true, user: { name: user.name, email: user.email } };
+}
+
+export async function removeAdmin(userId: string) {
+  const session = await requireAdmin();
+
+  if (userId === session.user.id) {
+    return { error: "You cannot remove yourself as admin." };
+  }
+
+  const target = await db.user.findUnique({ where: { id: userId } });
+  if (!target || target.role !== "ADMIN") {
+    return { error: "User is not an admin." };
+  }
+
+  await db.user.update({
+    where: { id: userId },
+    data: { role: "MEMBER" },
+  });
+
+  await db.auditLog.create({
+    data: {
+      userId: session.user.id,
+      action: "REMOVE_ADMIN",
+      entity: "User",
+      entityId: userId,
+      details: `Removed admin access from ${target.name} (${target.email})`,
+    },
+  });
+
+  return { success: true };
 }
 
 export async function getAdminReferrals() {
