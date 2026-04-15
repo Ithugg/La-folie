@@ -1,6 +1,7 @@
 "use server";
 
 import { hash } from "bcryptjs";
+import { AuthError } from "next-auth";
 import { signIn, signOut } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { signUpSchema, loginSchema } from "@/lib/validators";
@@ -79,11 +80,15 @@ export async function loginAction(formData: {
     await signIn("credentials", {
       email: parsed.data.email,
       password: parsed.data.password,
-      redirect: false,
+      redirectTo: "/dashboard",
     });
     return { success: true };
-  } catch {
-    return { error: "Invalid email or password" };
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return { error: "Invalid email or password" };
+    }
+    // Re-throw redirect errors (NextAuth redirects on success)
+    throw error;
   }
 }
 

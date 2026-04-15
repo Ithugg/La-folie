@@ -22,13 +22,11 @@ export default function LoginPage() {
 
     const result = await loginAction({ email, password });
 
-    if (result.error) {
+    if (result?.error) {
       setError(result.error);
       setLoading(false);
-    } else {
-      router.push("/dashboard");
-      router.refresh();
     }
+    // If no error, NextAuth handles the redirect to /dashboard
   }
 
   return (
