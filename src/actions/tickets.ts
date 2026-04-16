@@ -55,7 +55,7 @@ export async function createCheckoutSession(
       quantity: quantity.toString(),
     },
     success_url: `${process.env.NEXT_PUBLIC_APP_URL}/tickets/${order.id}?success=true`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/events/${tier.event.slug}?cancelled=true`,
+    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/calendar/${tier.event.slug}?cancelled=true`,
   });
 
   await db.order.update({

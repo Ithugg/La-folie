@@ -8,7 +8,7 @@ import { formatDate, formatPrice } from "@/lib/utils";
 
 export default async function TicketsPage() {
   const session = await auth();
-  if (!session?.user) redirect("/login");
+  if (!session?.user) redirect("/account");
 
   const tickets = await db.ticket.findMany({
     where: { userId: session.user.id },
@@ -43,7 +43,7 @@ export default async function TicketsPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
               </svg>
               <p className="text-mist mb-2">No tickets yet</p>
-              <Link href="/events" className="text-gold text-sm hover:text-gold-light transition-colors">
+              <Link href="/calendar" className="text-gold text-sm hover:text-gold-light transition-colors">
                 Browse events
               </Link>
             </div>

@@ -8,7 +8,7 @@ import { SignOutButton } from "./sign-out-button";
 
 export default async function ProfilePage() {
   const session = await auth();
-  if (!session?.user) redirect("/login");
+  if (!session?.user) redirect("/account");
 
   const user = await db.user.findUnique({
     where: { id: session.user.id },
@@ -22,7 +22,7 @@ export default async function ProfilePage() {
     },
   });
 
-  if (!user) redirect("/login");
+  if (!user) redirect("/account");
 
   return (
     <div className="min-h-screen py-24 px-4">

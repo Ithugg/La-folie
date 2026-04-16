@@ -7,7 +7,7 @@ import { formatDate, formatPrice } from "@/lib/utils";
 
 export default async function DashboardPage() {
   const session = await auth();
-  if (!session?.user) redirect("/login");
+  if (!session?.user) redirect("/account");
 
   const [tickets, referrals, events, announcements] = await Promise.all([
     db.ticket.count({ where: { userId: session.user.id } }),
@@ -125,7 +125,7 @@ export default async function DashboardPage() {
         <div>
           <div className="flex items-center justify-between mb-8">
             <h2 className="font-display text-2xl font-light text-ivory">Upcoming Events</h2>
-            <Link href="/events" className="text-[10px] tracking-[0.15em] uppercase text-gold/60 hover:text-gold transition-colors duration-300">
+            <Link href="/calendar" className="text-[10px] tracking-[0.15em] uppercase text-gold/60 hover:text-gold transition-colors duration-300">
               View all
             </Link>
           </div>
@@ -136,7 +136,7 @@ export default async function DashboardPage() {
           ) : (
             <div className="space-y-3">
               {events.map((event) => (
-                <Link key={event.id} href={`/events/${event.slug}`}>
+                <Link key={event.id} href={`/calendar/${event.slug}`}>
                   <div className="glass hover-glow rounded-2xl p-6 cursor-pointer group transition-all duration-500">
                     <div className="flex items-center justify-between">
                       <div>

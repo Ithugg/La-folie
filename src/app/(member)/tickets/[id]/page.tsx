@@ -13,7 +13,7 @@ export default async function TicketDetailPage({
 }) {
   const { id } = await params;
   const session = await auth();
-  if (!session?.user) redirect("/login");
+  if (!session?.user) redirect("/account");
 
   const ticket = await db.ticket.findFirst({
     where: { id, userId: session.user.id },

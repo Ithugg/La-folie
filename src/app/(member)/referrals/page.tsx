@@ -43,7 +43,7 @@ export default function ReferralsPage() {
   }
 
   function copyLink(code: string) {
-    const url = `${window.location.origin}/join/${code}`;
+    const url = `${window.location.origin}/account?code=${code}`;
     navigator.clipboard.writeText(url);
     setCopied(code);
     setTimeout(() => setCopied(""), 2000);

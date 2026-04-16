@@ -25,14 +25,13 @@ export function Navbar({ user }: NavbarProps) {
 
   const publicLinks = [
     { href: "/", label: "Home" },
-    { href: "/story", label: "Story" },
-    { href: "/events", label: "Events" },
-    { href: "/access", label: "Access" },
+    { href: "/calendar", label: "Calendar" },
+    { href: "/about", label: "About" },
   ];
 
   const memberLinks = [
     { href: "/dashboard", label: "Dashboard" },
-    { href: "/events", label: "Events" },
+    { href: "/calendar", label: "Calendar" },
     { href: "/referrals", label: "Referrals" },
     { href: "/tickets", label: "Tickets" },
     { href: "/profile", label: "Profile" },
@@ -107,7 +106,7 @@ export function Navbar({ user }: NavbarProps) {
               </>
             ) : (
               <Link
-                href="/login"
+                href="/account"
                 className="group relative inline-flex items-center justify-center px-7 py-2.5 overflow-hidden rounded-full"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-gold-dark via-gold to-gold-light opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
@@ -175,7 +174,7 @@ export function Navbar({ user }: NavbarProps) {
             <div className="mt-4 pt-4 border-t border-gold/10 px-4">
               {!user ? (
                 <Link
-                  href="/login"
+                  href="/account"
                   onClick={() => setMobileOpen(false)}
                   className="block text-center text-[11px] tracking-[0.15em] uppercase text-gold border border-gold/30 px-5 py-3 rounded-full hover:bg-gold/10 transition-all"
                 >

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 
@@ -34,7 +35,7 @@ const chapters = [
   },
 ];
 
-export default function StoryPage() {
+export default function AboutPage() {
   const heroRef = useRef(null);
   const { scrollYProgress: heroProgress } = useScroll({
     target: heroRef,
@@ -44,8 +45,32 @@ export default function StoryPage() {
 
   return (
     <div className="min-h-screen">
+      {/* Top minimal nav */}
+      <nav className="fixed top-6 left-6 right-6 z-50 flex items-center justify-between">
+        <Link href="/" className="font-cursive text-2xl text-gradient-gold">
+          La Folie
+        </Link>
+        <div className="flex items-center gap-6">
+          <Link
+            href="/calendar"
+            className="text-[11px] tracking-[0.3em] uppercase text-ivory/60 hover:text-ivory transition-colors"
+          >
+            Calendar
+          </Link>
+          <Link
+            href="/account"
+            className="text-[11px] tracking-[0.3em] uppercase text-ivory/60 hover:text-ivory transition-colors"
+          >
+            Sign In
+          </Link>
+        </div>
+      </nav>
+
       {/* Hero */}
-      <section ref={heroRef} className="relative h-[80vh] flex items-center justify-center overflow-hidden">
+      <section
+        ref={heroRef}
+        className="relative h-[80vh] flex items-center justify-center overflow-hidden"
+      >
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
@@ -68,7 +93,7 @@ export default function StoryPage() {
             transition={{ delay: 0.4 }}
             className="text-gold/50 text-[10px] tracking-[0.6em] uppercase mb-6"
           >
-            The Story
+            About Us
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -76,7 +101,8 @@ export default function StoryPage() {
             transition={{ delay: 0.6, duration: 1 }}
             className="font-display text-6xl sm:text-7xl md:text-8xl font-light text-ivory leading-[0.9]"
           >
-            Born from the<br />
+            Born from the
+            <br />
             <span className="text-gradient-gold italic">underground</span>
           </motion.h1>
         </motion.div>
@@ -87,7 +113,6 @@ export default function StoryPage() {
         <div className="absolute inset-0 bg-radial-dark" />
 
         <div className="relative z-10 max-w-2xl mx-auto">
-          {/* Opening line */}
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -95,13 +120,13 @@ export default function StoryPage() {
             transition={{ duration: 1 }}
             className="font-accent text-2xl sm:text-3xl text-ivory/60 italic text-center mb-24 leading-relaxed"
           >
-            Three friends. One shared obsession.<br />
+            Three friends. One shared obsession.
+            <br />
             <span className="text-gold/50">The rest is history being written.</span>
           </motion.p>
 
-          {/* Chapters */}
           <div className="space-y-20">
-            {chapters.map((chapter, i) => (
+            {chapters.map((chapter) => (
               <motion.div
                 key={chapter.label}
                 initial={{ opacity: 0, y: 40 }}
@@ -110,7 +135,6 @@ export default function StoryPage() {
                 transition={{ duration: 0.8 }}
                 className="relative"
               >
-                {/* Left accent */}
                 <div className="absolute -left-6 sm:-left-10 top-0 bottom-0 w-px bg-gradient-to-b from-gold/30 via-gold/10 to-transparent" />
                 <div className="absolute -left-6 sm:-left-10 top-1 w-1.5 h-1.5 rounded-full bg-gold/60" />
 
@@ -124,7 +148,6 @@ export default function StoryPage() {
             ))}
           </div>
 
-          {/* Closing */}
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -133,9 +156,19 @@ export default function StoryPage() {
             className="text-center mt-32"
           >
             <div className="w-16 h-px bg-gold/30 mx-auto mb-8" />
-            <p className="font-display text-4xl sm:text-5xl font-light text-ivory/30 italic">
+            <p className="font-display text-4xl sm:text-5xl font-light text-ivory/30 italic mb-12">
               The madness continues.
             </p>
+            <Link
+              href="/account"
+              className="group relative inline-flex items-center justify-center px-10 py-4 overflow-hidden rounded-full"
+            >
+              <span className="absolute inset-0 bg-gradient-to-r from-gold-dark via-gold to-gold-light opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
+              <span className="absolute inset-[1px] bg-obsidian/40 rounded-full group-hover:bg-transparent transition-all duration-500" />
+              <span className="relative text-sm font-medium tracking-[0.15em] uppercase text-ivory group-hover:text-white transition-colors duration-500">
+                Enter La Folie
+              </span>
+            </Link>
           </motion.div>
         </div>
       </section>

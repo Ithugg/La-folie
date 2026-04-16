@@ -70,17 +70,24 @@ export async function signUpAction(formData: {
 export async function loginAction(formData: {
   email: string;
   password: string;
+  redirectTo?: string;
 }) {
   const parsed = loginSchema.safeParse(formData);
   if (!parsed.success) {
     return { error: parsed.error.issues[0].message };
   }
 
+  // Only allow same-origin relative paths for redirectTo
+  const safeRedirect =
+    formData.redirectTo && formData.redirectTo.startsWith("/") && !formData.redirectTo.startsWith("//")
+      ? formData.redirectTo
+      : "/dashboard";
+
   try {
     await signIn("credentials", {
       email: parsed.data.email,
       password: parsed.data.password,
-      redirectTo: "/dashboard",
+      redirectTo: safeRedirect,
     });
     return { success: true };
   } catch (error) {

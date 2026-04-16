@@ -4,9 +4,9 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Public routes - always accessible
-  const publicRoutes = ["/", "/story", "/access", "/events", "/login"];
+  const publicRoutes = ["/", "/about", "/account"];
   const isPublicRoute =
-    publicRoutes.includes(pathname) || pathname.startsWith("/join/");
+    publicRoutes.includes(pathname) || pathname.startsWith("/calendar");
   const isApiRoute = pathname.startsWith("/api/");
 
   if (isPublicRoute || isApiRoute) {
