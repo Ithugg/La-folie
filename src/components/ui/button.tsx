@@ -31,7 +31,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         "bg-transparent text-ivory hover:bg-ash/50",
       danger:
         "bg-danger/10 text-red-400 hover:bg-danger/20 border border-danger/20",
-      gold: "bg-gradient-to-r from-gold-dark via-gold to-gold-light text-obsidian font-semibold hover:opacity-90",
+      gold: "bg-gradient-to-r from-gold-dark via-gold to-gold-light text-ivory font-semibold hover:opacity-90",
     };
 
     const sizes = {

@@ -26,7 +26,7 @@ export default async function AdminEventsPage() {
         </div>
         <Link
           href="/admin/events/new"
-          className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-obsidian bg-gradient-to-r from-gold-dark via-gold to-gold-light rounded-lg hover:opacity-90 transition-opacity"
+          className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-ivory bg-gradient-to-r from-gold-dark via-gold to-gold-light rounded-lg hover:opacity-90 transition-opacity"
         >
           Create Event
         </Link>

@@ -43,7 +43,7 @@ export function CTASection() {
             >
               <span className="absolute inset-0 bg-gradient-to-r from-gold-dark via-gold to-gold-light opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
               <span className="absolute inset-[1px] bg-obsidian/40 rounded-full group-hover:bg-transparent transition-all duration-500" />
-              <span className="relative text-sm font-medium tracking-[0.15em] uppercase text-ivory group-hover:text-obsidian transition-colors duration-500">
+              <span className="relative text-sm font-medium tracking-[0.15em] uppercase text-ivory group-hover:text-white transition-colors duration-500">
                 Request Access
               </span>
             </Link>
