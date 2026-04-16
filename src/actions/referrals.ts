@@ -82,13 +82,14 @@ export async function getReferralStats() {
     where: { referrerId: session.user.id },
   });
 
-  const activeCodesCount = await db.referralCode.count({
+  const allActiveCodes = await db.referralCode.findMany({
     where: {
       createdById: session.user.id,
       isActive: true,
-      usedCount: { lt: db.referralCode.fields.maxUses ? 1 : 1 },
     },
+    select: { usedCount: true, maxUses: true },
   });
+  const activeCodesCount = allActiveCodes.filter(c => c.usedCount < c.maxUses).length;
 
   return {
     weeklyUsed: weeklyLimit?.used || 0,
