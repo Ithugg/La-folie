@@ -9,11 +9,8 @@ export function MinimalHero() {
     <section className="relative h-screen w-full overflow-hidden bg-obsidian">
       {/* Animated smoke */}
       <div className="absolute inset-0 z-0">
-        <SmokeBackground smokeColor="#E63946" />
+        <SmokeBackground smokeColor="#FF0000" />
       </div>
-
-      {/* Vignette to focus content (keeps edges dark, center readable) */}
-      <div className="absolute inset-0 z-[1] pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(5,5,5,0.55)_80%)]" />
 
       {/* Top wordmark */}
       <motion.div

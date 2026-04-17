@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from 'react';
 
 // --- FRAGMENT SHADER ---
 // We add a `u_color` uniform to accept a color from our component.
@@ -44,7 +44,6 @@ void main(){
 // --- RENDERER CLASS ---
 // Updated to handle the new color uniform
 class Renderer {
-  // Converted plain-quoted multiline string to backtick template literal
   private readonly vertexSrc = `#version 300 es
 precision highp float;
 in vec4 position;
@@ -83,7 +82,6 @@ void main(){gl_Position=position;}`;
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-      // eslint-disable-next-line no-console
       console.error(`Shader compilation error: ${gl.getShaderInfoLog(shader)}`);
     }
   }
@@ -91,14 +89,8 @@ void main(){gl_Position=position;}`;
   reset() {
     const { gl, program, vs, fs } = this;
     if (!program) return;
-    if (vs) {
-      gl.detachShader(program, vs);
-      gl.deleteShader(vs);
-    }
-    if (fs) {
-      gl.detachShader(program, fs);
-      gl.deleteShader(fs);
-    }
+    if (vs) { gl.detachShader(program, vs); gl.deleteShader(vs); }
+    if (fs) { gl.detachShader(program, fs); gl.deleteShader(fs); }
     gl.deleteProgram(program);
     this.program = null;
   }
@@ -116,10 +108,7 @@ void main(){gl_Position=position;}`;
     gl.attachShader(this.program, this.fs);
     gl.linkProgram(this.program);
     if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
-      // eslint-disable-next-line no-console
-      console.error(
-        `Program linking error: ${gl.getProgramInfoLog(this.program)}`
-      );
+      console.error(`Program linking error: ${gl.getProgramInfoLog(this.program)}`);
     }
   }
 
@@ -128,18 +117,14 @@ void main(){gl_Position=position;}`;
     if (!program) return;
     this.buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array(this.vertices),
-      gl.STATIC_DRAW
-    );
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.STATIC_DRAW);
     const position = gl.getAttribLocation(program, "position");
     gl.enableVertexAttribArray(position);
     gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
     Object.assign(program, {
       resolution: gl.getUniformLocation(program, "resolution"),
       time: gl.getUniformLocation(program, "time"),
-      u_color: gl.getUniformLocation(program, "u_color"),
+      u_color: gl.getUniformLocation(program, "u_color"), // Get location of our new uniform
     });
   }
 
@@ -150,12 +135,9 @@ void main(){gl_Position=position;}`;
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.useProgram(program);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    gl.uniform2f((program as any).resolution, canvas.width, canvas.height);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    gl.uniform1f((program as any).time, now * 1e-3);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    gl.uniform3fv((program as any).u_color, this.color);
+    gl.uniform2f((program as unknown as { resolution: WebGLUniformLocation }).resolution, canvas.width, canvas.height);
+    gl.uniform1f((program as unknown as { time: WebGLUniformLocation }).time, now * 1e-3);
+    gl.uniform3fv((program as unknown as { u_color: WebGLUniformLocation }).u_color, this.color); // Send the color to the shader
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 }
@@ -163,90 +145,64 @@ void main(){gl_Position=position;}`;
 // --- UTILITY FUNCTION ---
 // Converts a hex color string like "#FF5733" to an array of floats [r, g, b]
 const hexToRgb = (hex: string): [number, number, number] | null => {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? [
-        parseInt(result[1], 16) / 255,
-        parseInt(result[2], 16) / 255,
-        parseInt(result[3], 16) / 255,
-      ]
-    : null;
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+      ? [
+          parseInt(result[1], 16) / 255,
+          parseInt(result[2], 16) / 255,
+          parseInt(result[3], 16) / 255,
+        ]
+      : null;
 };
 
 // --- REACT COMPONENT ---
-// Renamed interface from AnimatedBackgroundProps -> SmokeBackgroundProps
 interface SmokeBackgroundProps {
   smokeColor?: string; // e.g., "#8A2BE2"
 }
 
 export const SmokeBackground: React.FC<SmokeBackgroundProps> = ({
-  smokeColor = "#808080",
+  smokeColor = "#808080" // Default to gray
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const rendererRef = useRef<Renderer | null>(null);
-  const [reducedMotion, setReducedMotion] = useState(false);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const rendererRef = useRef<Renderer | null>(null);
 
-  // Respect prefers-reduced-motion for accessibility/performance
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReducedMotion(mq.matches);
-    const onChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
+    // Effect for initialization and cleanup
+    useEffect(() => {
+        if (!canvasRef.current) return;
+        const canvas = canvasRef.current;
+        const renderer = new Renderer(canvas, fragmentShaderSource);
+        rendererRef.current = renderer;
 
-  // Effect for initialization and cleanup
-  useEffect(() => {
-    if (reducedMotion) return;
-    if (!canvasRef.current) return;
-    const canvas = canvasRef.current;
+        const handleResize = () => renderer.updateScale();
+        handleResize(); // Initial size
+        window.addEventListener('resize', handleResize);
 
-    // Guard for browsers without WebGL2
-    if (!canvas.getContext("webgl2")) return;
+        let animationFrameId: number;
+        const loop = (now: number) => {
+            renderer.render(now);
+            animationFrameId = requestAnimationFrame(loop);
+        };
+        loop(0);
 
-    const renderer = new Renderer(canvas, fragmentShaderSource);
-    rendererRef.current = renderer;
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            cancelAnimationFrame(animationFrameId);
+            renderer.reset();
+        };
+    }, []);
 
-    const handleResize = () => renderer.updateScale();
-    handleResize();
-    window.addEventListener("resize", handleResize);
+    // Effect to update color when the prop changes
+    useEffect(() => {
+        const renderer = rendererRef.current;
+        if (renderer) {
+            const rgbColor = hexToRgb(smokeColor);
+            if (rgbColor) {
+                renderer.updateColor(rgbColor);
+            }
+        }
+    }, [smokeColor]);
 
-    let animationFrameId: number;
-    const loop = (now: number) => {
-      renderer.render(now);
-      animationFrameId = requestAnimationFrame(loop);
-    };
-    loop(0);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      cancelAnimationFrame(animationFrameId);
-      renderer.reset();
-    };
-  }, [reducedMotion]);
-
-  // Effect to update color when the prop changes
-  useEffect(() => {
-    const renderer = rendererRef.current;
-    if (renderer) {
-      const rgbColor = hexToRgb(smokeColor);
-      if (rgbColor) {
-        renderer.updateColor(rgbColor);
-      }
-    }
-  }, [smokeColor]);
-
-  // Static gradient fallback for reduced-motion users
-  if (reducedMotion) {
     return (
-      <div
-        className="w-full h-full block"
-        style={{
-          background: `radial-gradient(ellipse at 50% 70%, ${smokeColor}33 0%, #050505 70%)`,
-        }}
-      />
+            <canvas ref={canvasRef} className="w-full h-full block" />
     );
-  }
-
-  return <canvas ref={canvasRef} className="w-full h-full block" />;
 };
